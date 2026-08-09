@@ -1,6 +1,6 @@
 # Linux DevOps Roadmap - Hướng Dẫn Sử Dụng
 
-> Dành cho: Hoang | Môi trường: WSL2 Ubuntu 26.04 LTS | Mục tiêu: DevOps
+> Dành cho: Hoang | Môi trường: Ubuntu 26.04 LTS (dual boot) | Mục tiêu: DevOps
 
 ---
 
@@ -8,23 +8,20 @@
 
 ```
 linux_devops_roadmap/
-├── 00-huong-dan-su-dung.md      ← Bạn đang đọc file này
-├── 01-giai-doan-1-linux-core.md  ← 6 bài căn bản
-├── 02-giai-doan-2-linux-cho-devops.md  ← 8 bài chuyên sâu
-├── 03-giai-doan-3-thuc-chien-devops.md ← 4 bài thực chiến
-└── 99-cheat-sheet.md            ← Bảng tra nhanh
+├── 00-huong-dan-su-dung.md              ← Bạn đang đọc file này
+├── linux_ubuntu_hoc_tap.md              ← Tổng kết & tiến độ học tập
+├── 01-giai-doan-1-linux-core.md         ← 7 bài căn bản (có bài 0 làm quen lệnh)
+├── 02-giai-doan-2-linux-cho-devops.md   ← 8 bài chuyên sâu
+├── 03-giai-doan-3-thuc-chien-devops.md  ← 4 bài thực chiến
+└── 99-cheat-sheet.md                    ← Bảng tra nhanh
 ```
 
 ---
 
 ## 🖥️ Chuẩn Bị Trước Khi Học
 
-### 1. Mở WSL
-Nhấn `Win + R`, gõ `wsl`, nhấn Enter.
-
-Hoặc mở Windows Terminal → chọn tab `Ubuntu 26.04`.
-
-### 2. Kiểm tra bạn đang ở đâu
+### 1. Kiểm tra bạn đang ở đâu
+Mở terminal trong Ubuntu và chạy:
 ```bash
 whoami
 pwd
@@ -36,16 +33,16 @@ hoang
 /home/hoang
 ```
 
-### 3. Tạo thư mục học tập riêng (chỉ cần làm 1 lần)
+### 2. Tạo thư mục học tập riêng (chỉ cần làm 1 lần)
 ```bash
-mkdir -p ~/hoc-linux/devops-roadmap
-cd ~/hoc-linux/devops-roadmap
+mkdir -p ~/Test
+cd ~/Test
 pwd
 ```
 
-> 💡 **Mẹo:** Từ giờ, mỗi lần học bạn chỉ cần mở WSL và chạy:
+> 💡 **Mẹo:** Từ giờ, mỗi lần học bạn chỉ cần mở terminal và chạy:
 > ```bash
-> cd ~/hoc-linux/devops-roadmap
+> cd ~/Test
 > ```
 
 ---
@@ -57,7 +54,7 @@ Mỗi bài học được thiết kế theo công thức **~60 phút**:
 | Giai đoạn | Thời gian | Bạn làm gì |
 |-----------|-----------|------------|
 | Đọc lý thuyết | ~15 phút | Đọc phần giải thích, ghi nhớ khái niệm |
-| Thực hành từng bước | ~30 phút | Mở WSL, gõ **từng lệnh** theo hướng dẫn, quan sát output |
+| Thực hành từng bước | ~30 phút | Mở terminal, gõ **từng lệnh** theo hướng dẫn, quan sát output |
 | Task cuối bài | ~15 phút | Tự làm bài tập nhỏ, kiểm tra đáp án |
 
 ### Quy tắc vàng khi học:
@@ -85,8 +82,9 @@ Roadmap này không chỉ là lý thuyết rời rạc — bạn sẽ **nuôi d�
 ## 🚀 Lộ Trình 3 Giai Đoạn
 
 ### Giai đoạn 1: Linux Core (Tuần 1-2)
-Làm quen sâu với Linux, xong nốt những kiến thức còn thiếu sau 4 bài đầu.
+Làm quen sâu với Linux, từ những lệnh cơ bản nhất đến các kỹ năng cần thiết.
 
+- **Bài 0: Làm quen lệnh cơ bản** — `ls`, `cd`, `pwd`, `mkdir`, `touch`, `rm`, `cp`, `mv`, `cat` — làm hoàn toàn trong `~/Test`
 - Bài 1: Permissions (quyền truy cập file) — **tạo `deploy.sh`**
 - Bài 2: Process Management (quản lý tiến trình)
 - Bài 3: Package Management (cài đặt phần mềm)
@@ -106,11 +104,11 @@ Học những gì DevOps engineer dùng hàng ngày trên server.
 - Bài 13: Log Management — **theo dõi `company_app.log` + logrotate**
 - Bài 14: File Ownership & Advanced Find — **tìm & đổi quyền `company_app.log`**
 
-### Giai đoạn 3: Thực chiến DevOps trên WSL (Tuần 6-7)
+### Giai đoạn 3: Thực chiến DevOps trên Ubuntu (Tuần 6-7)
 Kết hợp tất cả để viết script, làm việc với container, giả lập CI/CD.
 
 - Bài 15: Shell Script thực tế — **viết script phân tích `company_app.log`, nâng cấp `deploy.sh`**
-- Bài 16: Docker trong WSL
+- Bài 16: Docker trên Ubuntu — *Yêu cầu cài Docker Engine trước*
 - Bài 17: Tự động hóa deploy giả lập — **đưa `deploy.sh` vào pipeline**
 - Bài 18: Tổng hợp & Ôn tập phỏng vấn — **audit script đọc `company_app.log`**
 
@@ -118,25 +116,25 @@ Kết hợp tất cả để viết script, làm việc với container, giả l
 
 ## ⚠️ Lưu Ý An Toàn
 
-- WSL và Windows là **2 thế giới riêng biệt**. Bạn thoải mái thực hành trong `/home/hoang`.
-- Chỉ đụng đến file Windows (`/mnt/c/...`) khi thực sự cần.
-- Nếu lỡ làm hỏng WSL, bạn có thể reset Ubuntu app từ Windows Store — nhưng mất dữ liệu trong WSL.
-- **Backup quan trọng:** Copy file quan trọng ra Windows nếu cần.
+- Bạn đang học trên Ubuntu dual boot thật — **mọi thay đổi đều có tác động thực sự**. Hãy cẩn thận với lệnh xóa/sửa hệ thống.
+- Thoải mái thực hành trong `/home/hoang/Test` — đây là không gian an toàn của bạn.
+- **Không** chạy `rm -rf /`, `sudo chown -R user /`, hoặc các lệnh "nguy hiểm" trừ khi bạn thực sự hiểu hậu quả.
+- Nếu lỡ làm hỏng hệ thống, bạn có thể cần cài lại Ubuntu — nhưng dữ liệu trong `/home/hoang` thường an toàn nếu bạn có phân vùng home riêng.
 
 ---
 
-## ✅ Checklist Trước Khi Bắt Đầu Bài 1
+## ✅ Checklist Trước Khi Bắt Đầu Bài 0
 
 ```bash
-# Chạy từng lệnh này trong WSL để kiểm tra:
+# Chạy từng lệnh này trong terminal để kiểm tra:
 whoami          # Kết quả: hoang
 pwd             # Kết quả: /home/hoang
 cd ~            # Về home
-mkdir -p ~/hoc-linux/devops-roadmap
-cd ~/hoc-linux/devops-roadmap
+mkdir -p ~/Test
+cd ~/Test
 ls -la          # Thư mục trống hoặc có vài file
 ```
 
-Nếu tất cả lệnh trên chạy ok → **Sẵn sàng!** Mở file `01-giai-doan-1-linux-core.md` và bắt đầu Bài 1.
+Nếu tất cả lệnh trên chạy ok → **Sẵn sàng!** Mở file `01-giai-doan-1-linux-core.md` và bắt đầu Bài 0.
 
 Chúc bạn học tập hiệu quả! 🎯

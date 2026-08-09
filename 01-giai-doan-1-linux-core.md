@@ -1,6 +1,272 @@
 # Giai Đoạn 1: Linux Core
 
-> 6 bài học | Mỗi bài ~60 phút | Mục tiêu: Tự tin dùng Linux cơ bản
+> 7 bài học | Mỗi bài ~60 phút | Mục tiêu: Tự tin dùng Linux cơ bản
+
+---
+
+# Bài 0: Làm Quen Lệnh Cơ Bản
+
+> ⏱️ Thời gian: ~60 phút (15p lý thuyết + 30p thực hành + 15p task)
+
+## Mục tiêu
+- Làm quen với terminal Linux
+- Biết và thực hành các lệnh cơ bản nhất: `pwd`, `ls`, `cd`, `mkdir`, `touch`, `rm`, `cp`, `mv`, `cat`, `echo`
+- Hiểu cấu trúc thư mục trong Linux
+- Thực hành hoàn toàn trong thư mục `~/Test`
+
+## Lý thuyết
+
+### Cấu trúc thư mục Linux cơ bản
+```
+/                    ← thư mục gốc (root)
+├── home/            ← thư mục chứa user
+│   └── hoang/       ← home của bạn
+├── etc/             ← file cấu hình hệ thống
+├── var/             ← log, dữ liệu thay đổi
+├── tmp/             ← file tạm
+└── usr/             ← phần mềm đã cài
+```
+
+### Các lệnh cơ bản
+
+| Lệnh | Ý nghĩa | Ví dụ |
+|------|---------|-------|
+| `pwd` | In đường dẫn hiện tại | `pwd` |
+| `ls` | Liệt kê file/thư mục | `ls`, `ls -l`, `ls -la` |
+| `cd` | Đổi thư mục | `cd /`, `cd ~`, `cd ..` |
+| `mkdir` | Tạo thư mục | `mkdir ten`, `mkdir -p a/b/c` |
+| `touch` | Tạo file rỗng | `touch file.txt` |
+| `rm` | Xóa file/thư mục | `rm file.txt`, `rm -rf thu_muc` |
+| `cp` | Copy file/thư mục | `cp file1 file2`, `cp -r thu_muc1/ thu_muc2/` |
+| `mv` | Di chuyển / đổi tên | `mv cu moi`, `mv file thu_muc/` |
+| `cat` | Đọc toàn bộ file | `cat file.txt` |
+| `echo` | In ra màn hình / ghi file | `echo "hello"`, `echo "hi" > file.txt` |
+
+> ⚠️ **Quy tắc an toàn:**
+> - `rm -rf` xóa vĩnh viễn, không có thùng rác.
+> - `>` ghi đè file cũ. Dùng `>>` để ghi thêm.
+> - Luôn kiểm tra vị trí (`pwd`) trước khi xóa/sửa.
+
+## Thực hành từng bước
+
+### Bước 1: Kiểm tra vị trí hiện tại
+```bash
+pwd
+```
+
+Output ví dụ: `/home/hoang`
+
+### Bước 2: Tạo thư mục học tập và di chuyển vào
+```bash
+mkdir -p ~/Test
+cd ~/Test
+pwd
+```
+
+Output: `/home/hoang/Test`
+
+> 💡 Từ giờ, **mọi bài tập đều làm trong `~/Test`**. Đây là "vùng an toàn" của bạn.
+
+### Bước 3: Liệt kê nội dung thư mục
+```bash
+ls
+ls -l
+ls -la
+```
+
+Giải thích:
+- `ls` — liệt kê tên file
+- `ls -l` — liệt kê chi tiết (quyền, owner, size, ngày)
+- `ls -la` — liệt kê cả file ẩn (bắt đầu bằng dấu `.`)
+
+### Bước 4: Tạo file đầu tiên
+```bash
+touch hello.txt
+ls -l hello.txt
+```
+
+Output: `-rw-r--r-- 1 hoang hoang 0 ... hello.txt`
+- `0` ở giữa = file rỗng (0 byte)
+
+### Bước 5: Ghi nội dung vào file
+```bash
+echo "Xin chao Linux" > hello.txt
+cat hello.txt
+```
+
+Output: `Xin chao Linux`
+
+> ⚠️ `>` ghi đè. Nếu chạy lại, nội dung cũ mất.
+
+Thêm dòng mới (không ghi đè):
+```bash
+echo "Day la bai tap dau tien" >> hello.txt
+cat hello.txt
+```
+
+Output:
+```
+Xin chao Linux
+Day la bai tap dau tien
+```
+
+### Bước 6: Tạo cấu trúc thư mục nhiều cấp
+```bash
+mkdir -p bai0/thu_muc_a/thu_muc_b
+ls -R bai0
+```
+
+> `-p` = parent — tạo cả thư mục cha nếu chưa có.
+> `ls -R` = recursive — liệt kê cả thư mục con.
+
+### Bước 7: Copy file
+```bash
+cp hello.txt bai0/
+ls bai0/
+cat bai0/hello.txt
+```
+
+Copy với tên mới:
+```bash
+cp hello.txt bai0/hello_copy.txt
+ls bai0/
+```
+
+### Bước 8: Di chuyển và đổi tên file
+```bash
+mv bai0/hello_copy.txt bai0/hello_moved.txt
+ls bai0/
+```
+
+Di chuyển file lên thư mục cha:
+```bash
+mv bai0/hello_moved.txt .
+ls
+ls bai0/
+```
+
+> `.` = thư mục hiện tại
+
+### Bước 9: Đọc một phần file
+```bash
+head -1 hello.txt
+```
+
+Output: `Xin chao Linux` (dòng đầu)
+
+```bash
+tail -1 hello.txt
+```
+
+Output: `Day la bai tap dau tien` (dòng cuối)
+
+### Bước 10: Xóa file và thư mục
+Xóa file:
+```bash
+rm hello_moved.txt
+ls
+```
+
+Xóa thư mục rỗng:
+```bash
+rmdir bai0/thu_muc_a/thu_muc_b
+ls -R bai0
+```
+
+Xóa thư mục có nội dung:
+```bash
+rm -rf bai0
+ls
+```
+
+> ⚠️ `rm -rf` cực kỳ nguy hiểm. Luôn `pwd` và `ls` trước khi xóa.
+
+### Bước 11: Điều hướng giữa các thư mục
+```bash
+cd /
+pwd
+ls
+```
+
+```bash
+cd ~
+pwd
+```
+
+```bash
+cd ~/Test
+pwd
+```
+
+> `cd ~` = về home (`/home/hoang`)
+> `cd /` = đi đến thư mục gốc
+> `cd ..` = lùi 1 cấp
+> `cd -` = quay lại thư mục trước đó
+
+### Bước 12: Tạo file nhiều dòng bằng heredoc
+```bash
+cat > story.txt << 'EOF'
+Ngay xua co mot con vit
+Con vit ay di lac
+No tim duong ve nha
+EOF
+cat story.txt
+```
+
+> `<< 'EOF'` = nhập nhiều dòng cho đến khi gặp `EOF`
+
+## Task cuối bài (15 phút)
+
+Trong thư mục `~/Test`, hãy làm các bước sau:
+
+1. Tạo thư mục `bai0_tap`.
+2. Trong `bai0_tap`, tạo 3 file: `file1.txt`, `file2.txt`, `file3.txt`.
+3. Ghi dòng `Hello file 1` vào `file1.txt`, `Hello file 2` vào `file2.txt`, `Hello file 3` vào `file3.txt`.
+4. Tạo thư mục `backup` bên trong `bai0_tap`.
+5. Copy cả 3 file vào `backup/`.
+6. Di chuyển `file3.txt` từ `bai0_tap` lên `~/Test` (dùng `mv`).
+7. Xóa `bai0_tap/file2.txt`.
+8. Liệt kê toàn bộ cấu trúc của `bai0_tap` bằng `ls -R bai0_tap`.
+
+## Đáp án / Gợi ý
+
+```bash
+cd ~/Test
+
+# Task 1
+mkdir bai0_tap
+
+# Task 2
+cd bai0_tap
+touch file1.txt file2.txt file3.txt
+
+# Task 3
+echo "Hello file 1" > file1.txt
+echo "Hello file 2" > file2.txt
+echo "Hello file 3" > file3.txt
+
+# Task 4
+mkdir backup
+
+# Task 5
+cp file1.txt file2.txt file3.txt backup/
+
+# Task 6
+mv file3.txt ../
+
+# Task 7
+rm file2.txt
+
+# Task 8
+ls -R .
+```
+
+## Lưu ý quan trọng
+- `mkdir -p` rất hữu ích để tạo nhiều cấp thư mục cùng lúc.
+- `cp -r` để copy thư mục (recursive).
+- `mv` vừa di chuyển vừa đổi tên.
+- Luôn kiểm tra bằng `ls` trước khi xóa.
+- Nếu bạn làm sai, có thể `rm -rf bai0_tap` và làm lại từ đầu.
 
 ---
 
@@ -49,7 +315,7 @@ Công thức số:
 
 ### Bước 1: Vào thư mục học tập
 ```bash
-cd ~/hoc-linux/devops-roadmap
+cd ~/Test
 pwd
 ```
 
@@ -166,7 +432,7 @@ Output: `drwx------` → chỉ owner được vào, đọc, sửa.
 ## Đáp án / Gợi ý
 
 ```bash
-cd ~/hoc-linux/devops-roadmap
+cd ~/Test
 
 # Task 1
 cat > backup_script.sh << 'EOF'
@@ -191,7 +457,7 @@ ls -ld private_data
 ## Lưu ý quan trọng
 - `chmod 777` chỉ dùng khi test cục bộ, **không bao giờ** dùng trên server production.
 - `chmod +x` là lệnh DevOps dùng nhiều nhất cho các file `.sh`.
-- Nếu bạn copy file từ Windows vào WSL, file có thể mất quyền execute. Nhớ `chmod +x` lại.
+- Nếu bạn copy file từ hệ thống khác vào, file có thể mất quyền execute. Nhớ `chmod +x` lại.
 
 ---
 
@@ -601,7 +867,7 @@ echo $PROJECT_NAME
 
 Output: `devops-demo`
 
-Thử mở terminal mới (đóng WSL, mở lại):
+Thử mở terminal mới (tab mới hoặc đóng mở lại):
 ```bash
 echo $PROJECT_NAME
 ```
@@ -673,7 +939,7 @@ c: command not found
 Nhớ file `deploy.sh` đã tạo ở Bài 1? Giờ ta sẽ cập nhật nó để sử dụng biến môi trường.
 
 ```bash
-cd ~/hoc-linux/devops-roadmap
+cd ~/Test
 cat deploy.sh
 ```
 
@@ -747,7 +1013,7 @@ myip
 tail -10 ~/.bashrc
 
 # Task 6
-cat ~/hoc-linux/devops-roadmap/deploy.sh
+cat ~/Test/deploy.sh
 ```
 
 ## Lưu ý quan trọng
@@ -788,7 +1054,7 @@ cat ~/hoc-linux/devops-roadmap/deploy.sh
 ### Bước 1: Tạo file log mẫu (`company_app.log`) — Storyline
 
 ```bash
-cd ~/hoc-linux/devops-roadmap
+cd ~/Test
 cat > company_app.log << 'EOF'
 2025-07-10 INFO Server started
 2025-07-10 ERROR Database timeout
@@ -910,7 +1176,7 @@ Không có output nào. `/dev/null` là "thùng rác vĩnh viễn" của Linux.
 ## Đáp án / Gợi ý
 
 ```bash
-cd ~/hoc-linux/devops-roadmap
+cd ~/Test
 
 # Task 1 — Thêm dòng vào company_app.log (dùng >> để giữ dòng cũ)
 cat >> company_app.log << 'EOF'
@@ -975,7 +1241,7 @@ Trên server Linux, **không có VS Code**. Bạn chỉ có terminal.
 
 #### Bước 1: Mở nano
 ```bash
-cd ~/hoc-linux/devops-roadmap
+cd ~/Test
 nano hello.txt
 ```
 
@@ -1088,7 +1354,7 @@ vim vim_test.txt
 #### Bước 9: Sửa `deploy.sh` bằng vim — Storyline
 
 ```bash
-cd ~/hoc-linux/devops-roadmap
+cd ~/Test
 vim deploy.sh
 ```
 
@@ -1147,12 +1413,12 @@ grep -i timeout company_app.log
 ## Đáp án / Gợi ý
 
 ```bash
-cd ~/hoc-linux/devops-roadmap
+cd ~/Test
 
 # Task 1
 nano nano_bai_tap.txt
 # Gõ: Hoang
-# Gõ: 16/07/2026
+# Gõ: 10/08/2026
 # Ctrl+O → Enter → Ctrl+X
 
 # Task 2
@@ -1189,7 +1455,8 @@ ENV=staging ./deploy.sh
 
 ## ✅ Kết Thúc Giai Đoạn 1
 
-Sau 6 bài, bạn đã biết:
+Sau 7 bài, bạn đã biết:
+- Các lệnh cơ bản nhất (`ls`, `cd`, `mkdir`, `cp`, `mv`, `rm`, `cat`, `echo`)
 - Quản lý quyền file (`chmod`, `chown`)
 - Quản lý tiến trình (`ps`, `top`, `kill`)
 - Cài phần mềm (`apt`)
@@ -1199,7 +1466,7 @@ Sau 6 bài, bạn đã biết:
 
 **Hãy ôn lại bằng cách:**
 ```bash
-cd ~/hoc-linux/devops-roadmap
+cd ~/Test
 alias
 cat company_app.log | grep ERROR | wc -l
 ll

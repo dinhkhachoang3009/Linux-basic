@@ -21,6 +21,9 @@
 | `head -n 20 file` | 20 dòng đầu |
 | `tail -n 20 file` | 20 dòng cuối |
 | `tail -f file` | Theo dõi file realtime |
+| `echo "text"` | In ra màn hình |
+| `echo "text" > file` | Ghi đè file |
+| `echo "text" >> file` | Ghi thêm vào file |
 | `less file` | Xem file có thể cuộn (nhấn `q` thoát) |
 
 ---

@@ -1,4 +1,4 @@
-# Giai Đoạn 3: Thực Chiến DevOps Trên WSL
+# Giai Đoạn 3: Thực Chiến DevOps Trên Ubuntu
 
 > 4 bài học | Mỗi bài ~60 phút | Mục tiêu: Kết hợp tất cả kỹ năng để tự động hóa như DevOps thực thụ
 
@@ -35,14 +35,14 @@ echo "Hello"
 
 ### Bước 1: Script backup đơn giản
 ```bash
-cd ~/hoc-linux/devops-roadmap
+cd ~/Test
 
 cat > backup_daily.sh << 'EOF'
 #!/bin/bash
 
 # Thiet lap
-SOURCE_DIR="/home/hoang/hoc-linux/devops-roadmap"
-BACKUP_DIR="/home/hoang/hoc-linux/devops-roadmap/backups"
+SOURCE_DIR="/home/hoang/Test"
+BACKUP_DIR="/home/hoang/Test/backups"
 DATE=$(date +%Y%m%d_%H%M%S)
 BACKUP_NAME="backup_${DATE}.tar.gz"
 
@@ -79,7 +79,7 @@ cat backups/backup.log
 cat > health_check.sh << 'EOF'
 #!/bin/bash
 
-LOG_FILE="/home/hoang/hoc-linux/devops-roadmap/health_check.log"
+LOG_FILE="/home/hoang/Test/health_check.log"
 
 # Lay thong tin
 CPU=$(top -bn1 | grep "Cpu(s)" | awk '{print $2}' | cut -d'%' -f1)
@@ -183,8 +183,8 @@ chmod +x functions_demo.sh
 cat > analyze_log.sh << 'EOF'
 #!/bin/bash
 
-LOG_FILE="/home/hoang/hoc-linux/devops-roadmap/company_app.log"
-REPORT_FILE="/home/hoang/hoc-linux/devops-roadmap/log_report.txt"
+LOG_FILE="/home/hoang/Test/company_app.log"
+REPORT_FILE="/home/hoang/Test/log_report.txt"
 
 if [ ! -f "$LOG_FILE" ]; then
     echo "ERROR: $LOG_FILE khong ton tai"
@@ -225,7 +225,7 @@ cat > deploy.sh << 'EOF'
 set -e
 
 ENV="${ENV:-development}"
-LOG_FILE="/home/hoang/hoc-linux/devops-roadmap/deploy.log"
+LOG_FILE="/home/hoang/Test/deploy.log"
 
 deploy() {
     echo "[$(date)] Bat dau deploy moi truong: $ENV" | tee -a "$LOG_FILE"
@@ -256,7 +256,7 @@ cat deploy.log
 ## Đáp án / Gợi ý
 
 ```bash
-cd ~/hoc-linux/devops-roadmap
+cd ~/Test
 
 # Task 1
 cat > disk_alert.sh << 'EOF'
@@ -298,15 +298,36 @@ ENV=production ./deploy.sh
 
 ---
 
-# Bài 16: Docker Trong WSL
+# Bài 16: Docker Trên Ubuntu
 
 > ⏱️ Thời gian: ~60 phút (15p lý thuyết + 30p thực hành + 15p task)
+> 
+> ⚠️ **Yêu cầu:** Bạn cần cài Docker Engine trước khi làm bài này.
 
 ## Mục tiêu
-- Dùng Docker từ trong WSL
+- Dùng Docker từ trong Ubuntu
 - Chạy container, xem log, exec vào container
 - Hiểu volume mount
 - DevOps containerize ứng dụng bằng Docker
+
+## Chuẩn bị: Cài Docker Engine (nếu chưa cài)
+
+Trên Ubuntu, bạn có thể cài Docker Engine bằng:
+```bash
+sudo apt update
+sudo apt install docker.io -y
+sudo systemctl start docker
+sudo systemctl enable docker
+sudo usermod -aG docker hoang
+```
+
+> Sau khi thêm user vào nhóm `docker`, bạn cần **đăng xuất và đăng nhập lại** (hoặc chạy `newgrp docker`) để quyền có hiệu lực.
+
+Kiểm tra:
+```bash
+docker --version
+docker ps
+```
 
 ## Lý thuyết
 
@@ -340,7 +361,7 @@ Nếu báo lỗi permission:
 sudo usermod -aG docker hoang
 ```
 
-> Cần đăng xuất WSL (`exit`) rồi mở lại để nhóm `docker` có hiệu lực.
+> Cần đăng xuất rồi đăng nhập lại để nhóm `docker` có hiệu lực. Hoặc chạy `newgrp docker`.
 
 ### Bước 2: Chạy container hello-world
 ```bash
@@ -409,15 +430,15 @@ docker rm mynginx
 docker ps -a
 ```
 
-### Bước 8: Volume mount — chia sẻ file giữa WSL và container
+### Bước 8: Volume mount — chia sẻ file giữa host và container
 ```bash
-cd ~/hoc-linux/devops-roadmap
-echo "<h1>Hello from WSL</h1>" > index.html
+cd ~/Test
+echo "<h1>Hello from Ubuntu</h1>" > index.html
 
 docker run -d --name mynginx2 -p 8080:80 -v $(pwd)/index.html:/usr/share/nginx/html/index.html nginx
 ```
 
-> `-v <host>:<container>` = mount file/thư mục từ WSL vào container.
+> `-v <host>:<container>` = mount file/thư mục từ host vào container.
 
 Test:
 ```bash
@@ -426,7 +447,7 @@ curl http://localhost:8080
 
 Output:
 ```
-<h1>Hello from WSL</h1>
+<h1>Hello from Ubuntu</h1>
 ```
 
 Dọn dẹp:
@@ -477,7 +498,7 @@ docker ps -a
 - Container là **stateless** — dữ liệu trong container mất khi xóa. Dùng **volume** để lưu dữ liệu lâu dài.
 - `docker exec -it` giống SSH vào server nhỏ bên trong container.
 - DevOps hay viết `Dockerfile` để build image. Ở đây bạn dùng image có sẵn để làm quen.
-- WSL + Docker Desktop chia sẻ kernel. Container trong WSL chạy native, không quá VM.
+- Trên Ubuntu thật, Docker chạy native với kernel Linux — không qua lớp abstraction.
 
 ---
 
@@ -504,7 +525,7 @@ DevOps luôn tự động hóa để tránh lỗi con người.
 
 ### Bước 1: Tạo cấu trúc giả lập
 ```bash
-cd ~/hoc-linux/devops-roadmap
+cd ~/Test
 mkdir -p deploy_project/{src,build,deploy}
 ```
 
@@ -523,7 +544,7 @@ cat > deploy_project/pipeline.sh << 'EOF'
 
 set -e  # Dung ngay neu co loi
 
-PROJECT_DIR="/home/hoang/hoc-linux/devops-roadmap/deploy_project"
+PROJECT_DIR="/home/hoang/Test/deploy_project"
 BUILD_DIR="${PROJECT_DIR}/build"
 DEPLOY_DIR="${PROJECT_DIR}/deploy"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
@@ -575,7 +596,7 @@ chmod +x deploy_project/pipeline.sh
 
 ### Bước 3: Chạy pipeline
 ```bash
-cd ~/hoc-linux/devops-roadmap
+cd ~/Test
 ./deploy_project/pipeline.sh
 ```
 
@@ -602,8 +623,8 @@ ls deploy_project/deploy/
 cat > deploy_project/rollback.sh << 'EOF'
 #!/bin/bash
 
-DEPLOY_DIR="/home/hoang/hoc-linux/devops-roadmap/deploy_project/deploy"
-BUILD_DIR="/home/hoang/hoc-linux/devops-roadmap/deploy_project/build"
+DEPLOY_DIR="/home/hoang/Test/deploy_project/deploy"
+BUILD_DIR="/home/hoang/Test/deploy_project/build"
 
 echo "Current version: $(cat ${DEPLOY_DIR}/version.txt)"
 echo "Available artifacts:"
@@ -657,7 +678,7 @@ cat > deploy_project/pipeline.sh << 'EOF'
 
 set -e
 
-PROJECT_DIR="/home/hoang/hoc-linux/devops-roadmap/deploy_project"
+PROJECT_DIR="/home/hoang/Test/deploy_project"
 BUILD_DIR="${PROJECT_DIR}/build"
 DEPLOY_DIR="${PROJECT_DIR}/deploy"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
@@ -711,7 +732,7 @@ chmod +x deploy_project/pipeline.sh
 ## Đáp án / Gợi ý
 
 ```bash
-cd ~/hoc-linux/devops-roadmap
+cd ~/Test
 
 # Task 1
 cat > deploy_project/src/app.sh << 'EOF'
@@ -726,7 +747,7 @@ ls -lh deploy_project/build/
 # Task 3
 cat > health_deploy.sh << 'EOF'
 #!/bin/bash
-if [ -f "/home/hoang/hoc-linux/devops-roadmap/deploy_project/deploy/app.sh" ]; then
+if [ -f "/home/hoang/Test/deploy_project/deploy/app.sh" ]; then
     echo "Deploy OK"
 else
     echo "Deploy FAILED"
@@ -782,7 +803,7 @@ Những câu hỏi phỏng vấn Linux cho DevOps thường gặp:
 
 ### Bước 1: Giả lập server chậm (tạo file lớn)
 ```bash
-cd ~/hoc-linux/devops-roadmap
+cd ~/Test
 
 dd if=/dev/zero of=load_test bs=1M count=200 &
 ```
@@ -866,13 +887,13 @@ Hãy viết 1 script `server_audit.sh` tổng hợp:
 ## Đáp án / Gợi ý
 
 ```bash
-cd ~/hoc-linux/devops-roadmap
+cd ~/Test
 
 cat > server_audit.sh << 'EOF'
 #!/bin/bash
 
 OUTPUT="audit_$(date +%Y%m%d).txt"
-APP_LOG="/home/hoang/hoc-linux/devops-roadmap/company_app.log"
+APP_LOG="/home/hoang/Test/company_app.log"
 
 {
     echo "=== SERVER AUDIT ==="
@@ -918,7 +939,7 @@ chmod +x server_audit.sh
 
 ## ✅ Kết Thúc Toàn Bộ Lộ Trình
 
-Chúc mừng! Bạn đã hoàn thành 18 bài học Linux cho DevOps.
+Chúc mừng! Bạn đã hoàn thành 19 bài học Linux cho DevOps (7 bài Giai đoạn 1 + 8 bài Giai đoạn 2 + 4 bài Giai đoạn 3).
 
 ### Bạn biết được:
 - Quản lý file, quyền, process

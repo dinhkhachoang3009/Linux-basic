@@ -269,7 +269,7 @@ sudo journalctl --boot --no-pager | tail -20
 
 1. Kiểm tra `ssh` đang chạy không.
 2. Nếu không chạy, hãy bật lên.
-3. Cho phép `ssh` tự động chạy khi WSL khởi động (dùng `enable`).
+3. Cho phép `ssh` tự động chạy khi khởi động máy (dùng `enable`).
 4. Xem 10 dòng log cuối của `ssh`.
 5. Tìm trong log xem có từ "Server" không (dùng `grep`).
 
@@ -295,7 +295,7 @@ sudo journalctl -u ssh --no-pager | grep Server
 ## Lưu ý quan trọng
 - `systemctl restart` khác `reload`: `restart` tắt rồi mở lại, `reload` chỉ nạp lại config (không mất kết nối).
 - DevOps hay dùng: `systemctl restart docker`, `journalctl -u nginx -f`.
-- WSL không có systemd đầy đủ như server thật (WSL dùng `init` đặc biệt). Một số service có thể không có hoặc hoạt động khác. Trên server Ubuntu thật, `systemctl` hoạt động hoàn hảo.
+- Trên Ubuntu dual boot, `systemd` hoạt động hoàn chỉnh giống server thật.
 
 ---
 
@@ -370,7 +370,7 @@ lsblk
 
 ### Bước 6: Tạo file lớn và quan sát
 ```bash
-cd ~/hoc-linux/devops-roadmap
+cd ~/Test
 dd if=/dev/zero of=bigfile bs=1M count=100
 ```
 
@@ -416,7 +416,7 @@ find /home/hoang -type f -exec ls -lh {} \; 2>/dev/null | sort -k5 -rh | head -3
 find /home/hoang -type f -size +1M -exec ls -lh {} \; 2>/dev/null
 
 # Task 4
-cd ~/hoc-linux/devops-roadmap
+cd ~/Test
 dd if=/dev/zero of=test_50mb bs=1M count=50
 ls -lh test_50mb
 rm test_50mb
@@ -460,7 +460,7 @@ rm test_50mb
 ip a
 ```
 
-Tìm dòng `inet` — đó là IP của bạn (thường `172.x.x.x` hoặc `192.168.x.x` trong WSL).
+Tìm dòng `inet` — đó là IP của bạn (thường `172.x.x.x` hoặc `192.168.x.x` trong mạng nội bộ).
 
 ```bash
 hostname
@@ -499,7 +499,7 @@ server: GitHub.com
 
 ### Bước 4: Tải file bằng wget
 ```bash
-cd ~/hoc-linux/devops-roadmap
+cd ~/Test
 wget https://raw.githubusercontent.com/docker/docker-ce/master/README.md -O docker_readme.md
 ls -lh docker_readme.md
 ```
@@ -656,15 +656,20 @@ ssh-rsa AAAA... hoang_devops
 > Nếu bạn có server thật, copy dòng này vào `~/.ssh/authorized_keys` trên server.
 
 ### Bước 4: Thử SSH vào chính mình (localhost)
+
+> 💡 Trên Ubuntu thật, bạn cần cài SSH server trước:
+> ```bash
+> sudo apt install openssh-server -y
+> sudo systemctl start ssh
+> sudo systemctl enable ssh
+> ```
+
+Thử đăng nhập localhost:
 ```bash
 ssh localhost
 ```
 
-Nếu hỏi password → nhập password WSL của bạn. Nếu báo `Connection refused` → SSH chưa chạy:
-```bash
-sudo systemctl start ssh
-ssh localhost
-```
+Nếu hỏi password → nhập password của bạn.
 
 Thoát:
 ```bash
@@ -684,7 +689,7 @@ exit
 
 ### Bước 6: Copy file bằng scp
 ```bash
-cd ~/hoc-linux/devops-roadmap
+cd ~/Test
 echo "Remote file content" > remote_test.txt
 scp remote_test.txt localhost:/tmp/
 ```
@@ -696,7 +701,7 @@ ssh localhost "cat /tmp/remote_test.txt"
 
 ### Bước 7: Đồng bộ bằng rsync
 ```bash
-rsync -avz ~/hoc-linux/devops-roadmap/ localhost:/tmp/backup_devops/
+rsync -avz ~/Test/ localhost:/tmp/backup_devops/
 ```
 
 - `-a` = archive (giữ quyền, timestamp)
@@ -712,7 +717,7 @@ ssh localhost "ls -la /tmp/backup_devops/"
 
 1. Xem nội dung file `~/.ssh/id_rsa.pub`.
 2. Tạo file `deploy.txt` và copy lên `/tmp/deploy.txt` trên localhost bằng `scp`.
-3. Dùng `rsync` đồng bộ thư mục `~/hoc-linux` vào `/tmp/hoc_backup`.
+3. Dùng `rsync` đồng bộ thư mục `~/Test` vào `/tmp/hoc_backup`.
 4. SSH vào localhost và xóa `/tmp/deploy.txt` từ xa (dùng lệnh trong dấu ngoặc kép).
 
 ## Đáp án / Gợi ý
@@ -726,7 +731,7 @@ echo "Deploy version 1.0" > deploy.txt
 scp deploy.txt localhost:/tmp/deploy.txt
 
 # Task 3
-rsync -avz ~/hoc-linux/ localhost:/tmp/hoc_backup/
+rsync -avz ~/Test/ localhost:/tmp/hoc_backup/
 
 # Task 4
 ssh localhost "rm /tmp/deploy.txt"
@@ -805,7 +810,7 @@ Lần đầu hỏi chọn editor → chọn `1` (nano) để dễ dùng.
 ### Bước 4: Thêm job đơn giản — ghi log mỗi phút
 Thêm dòng sau vào cuối file:
 ```
-* * * * * echo "Cron chay luc $(date)" >> /home/hoang/hoc-linux/devops-roadmap/cron_log.txt
+* * * * * echo "Cron chay luc $(date)" >> /home/hoang/Test/cron_log.txt
 ```
 
 Lưu: `Ctrl+O` → `Enter` → `Ctrl+X`.
@@ -817,14 +822,14 @@ crontab -l | tail -3
 
 ### Bước 6: Đợi 1-2 phút rồi kiểm tra log
 ```bash
-cd ~/hoc-linux/devops-roadmap
+cd ~/Test
 cat cron_log.txt
 ```
 
 Output có thể như:
 ```
-Cron chay luc Thu Jul 16 08:15:01 UTC 2026
-Cron chay luc Thu Jul 16 08:16:01 UTC 2026
+Cron chay luc Mon Aug 10 08:15:01 UTC 2026
+Cron chay luc Mon Aug 10 08:16:01 UTC 2026
 ```
 
 > 💡 Nếu không thấy gì sau 2 phút, kiểm tra lại đường dẫn trong crontab.
@@ -838,13 +843,13 @@ Xóa dòng vừa thêm → lưu → thoát.
 
 ### Bước 8: Tạo script backup tự động
 ```bash
-cd ~/hoc-linux/devops-roadmap
+cd ~/Test
 cat > backup.sh << 'EOF'
 #!/bin/bash
-BACKUP_DIR="/home/hoang/hoc-linux/devops-roadmap/backup_$(date +%Y%m%d_%H%M%S)"
+BACKUP_DIR="/home/hoang/Test/backup_$(date +%Y%m%d_%H%M%S)"
 mkdir -p "$BACKUP_DIR"
-cp -r /home/hoang/hoc-linux/devops-roadmap/*.txt "$BACKUP_DIR/" 2>/dev/null
-echo "Backup done at $(date)" >> /home/hoang/hoc-linux/devops-roadmap/backup_history.txt
+cp -r /home/hoang/Test/*.txt "$BACKUP_DIR/" 2>/dev/null
+echo "Backup done at $(date)" >> /home/hoang/Test/backup_history.txt
 EOF
 chmod +x backup.sh
 ./backup.sh
@@ -863,7 +868,7 @@ crontab -e
 
 Thêm:
 ```
-0 2 * * * /home/hoang/hoc-linux/devops-roadmap/backup.sh
+0 2 * * * /home/hoang/Test/backup.sh
 ```
 
 Nghĩa là: 2:00 sáng mỗi ngày chạy script.
@@ -872,7 +877,7 @@ Nghĩa là: 2:00 sáng mỗi ngày chạy script.
 
 ### Bước 10: Dùng `at` để chạy 1 lần
 ```bash
-echo "echo 'Hello from at' >> ~/hoc-linux/devops-roadmap/at_log.txt" | at now + 1 minute
+echo "echo 'Hello from at' >> ~/Test/at_log.txt" | at now + 1 minute
 ```
 
 Kiểm tra danh sách:
@@ -882,7 +887,7 @@ atq
 
 Sau 1 phút:
 ```bash
-cat ~/hoc-linux/devops-roadmap/at_log.txt
+cat ~/Test/at_log.txt
 ```
 
 ## Task cuối bài (15 phút)
@@ -895,18 +900,18 @@ cat ~/hoc-linux/devops-roadmap/at_log.txt
 ## Đáp án / Gợi ý
 
 ```bash
-cd ~/hoc-linux/devops-roadmap
+cd ~/Test
 
 # Task 1
 cat > health_check.sh << 'EOF'
 #!/bin/bash
-echo "Health OK - $(date)" >> /home/hoang/hoc-linux/devops-roadmap/health.log
+echo "Health OK - $(date)" >> /home/hoang/Test/health.log
 EOF
 chmod +x health_check.sh
 
 # Task 2
 crontab -e
-# Thêm: */2 * * * * /home/hoang/hoc-linux/devops-roadmap/health_check.sh
+# Thêm: */2 * * * * /home/hoang/Test/health_check.sh
 # Đợi 10 phút, rồi xóa job bằng crontab -e
 
 # Task 3
@@ -920,7 +925,7 @@ echo 'echo "Done"' | at now + 2 minutes
 - Cron chạy với môi trường tối thiểu. Nên dùng **đường dẫn tuyệt đối** trong script (`/home/hoang/...` thay vì `~/...`).
 - Output của cron job được gửi mail cho user. Trên server không có mail, nên luôn redirect output: `* * * * * /script.sh > /tmp/script.log 2>&1`.
 - DevOps hay dùng `cron` + `logrotate` để tự động hóa hoàn toàn.
-- WSL cron có thể không chạy khi WSL đang sleep. Trên server thật, cron luôn chạy 24/7.
+- Trên Ubuntu dual boot, cron chạy 24/7 miễn máy đang bật.
 
 ---
 
@@ -1004,7 +1009,7 @@ sudo tail -5 /var/log/auth.log
 ### Bước 6: Theo dõi `company_app.log` realtime — Storyline
 
 ```bash
-cd ~/hoc-linux/devops-roadmap
+cd ~/Test
 tail -f company_app.log &
 ```
 
@@ -1030,7 +1035,7 @@ cat /etc/logrotate.conf | head -20
 Ví dụ cấu hình logrotate cho log dự án của bạn:
 ```bash
 sudo tee /etc/logrotate.d/company_app << 'EOF'
-/home/hoang/hoc-linux/devops-roadmap/company_app.log {
+/home/hoang/Test/company_app.log {
     daily
     rotate 7
     compress
@@ -1049,7 +1054,7 @@ Giải thích:
 
 Thử chạy logrotate:
 ```bash
-sudo logrotate -d /etc/logrotate.d/myapp
+sudo logrotate -d /etc/logrotate.d/company_app
 ```
 
 > `-d` = debug (không thực sự chạy, chỉ xem sẽ làm gì).
@@ -1065,7 +1070,7 @@ sudo logrotate -d /etc/logrotate.d/myapp
 ## Đáp án / Gợi ý
 
 ```bash
-cd ~/hoc-linux/devops-roadmap
+cd ~/Test
 
 # Task 1 — Thêm dòng vào company_app.log
 cat >> company_app.log << 'EOF'
@@ -1128,7 +1133,7 @@ wc -l company_app.log
 
 ### Bước 1: Tạo file và xem owner
 ```bash
-cd ~/hoc-linux/devops-roadmap
+cd ~/Test
 touch owner_test.txt
 ls -l owner_test.txt
 ```
@@ -1181,12 +1186,12 @@ find ~ -type f -size +1M -ls 2>/dev/null | head -10
 
 ### Bước 7: Tìm file sửa đổi trong 24h qua
 ```bash
-find ~/hoc-linux/devops-roadmap -type f -mtime -1
+find ~/Test -type f -mtime -1
 ```
 
 ### Bước 8: Tìm và xóa file `.tmp` cũ hơn 7 ngày
 ```bash
-cd ~/hoc-linux/devops-roadmap
+cd ~/Test
 touch old1.tmp
 touch old2.tmp
 find . -name "*.tmp" -mtime +7
@@ -1215,7 +1220,7 @@ find . -name "*.txt" -exec wc -l {} \;
 ### Bước 10: Kiểm tra & đổi quyền `company_app.log` — Storyline
 
 ```bash
-cd ~/hoc-linux/devops-roadmap
+cd ~/Test
 ls -l company_app.log
 ```
 
@@ -1243,7 +1248,7 @@ find . -name "*.log"
 ## Đáp án / Gợi ý
 
 ```bash
-cd ~/hoc-linux/devops-roadmap
+cd ~/Test
 
 # Task 1
 for i in 1 2 3 4 5; do touch data${i}.txt; done
