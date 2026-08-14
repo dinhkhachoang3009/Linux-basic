@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminal Output - 10 Aug</title>
+    <style>
+        body {
+            background-color: #0d0d0d;
+            color: #d4d4d4;
+            font-family: "Consolas", "Monaco", "Courier New", monospace;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.4;
+            font-size: 14px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        pre.terminal {
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            overflow-x: auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .prompt-user { color: #4ec9b0; font-weight: bold; }
+        .prompt-path { color: #569cd6; font-weight: bold; }
+        .prompt-delim { color: #d4d4d4; }
+        .command { color: #ffffff; }
+        .output { color: #cccccc; }
+        .error { color: #f44336; }
+        .directory { color: #569cd6; font-weight: bold; }
+    </style>
+</head>
+<body>
+<div class="container">
+<pre class="terminal">
+<span class="prompt-user">hoang@hoang-Vostro-15-5510</span><span class="prompt-delim">:</span><span class="prompt-path">~/Test</span><span class="prompt-delim">$</span><span class="command"> mkdir bai0_tap</span>
+<span class="prompt-user">hoang@hoang-Vostro-15-5510</span><span class="prompt-delim">:</span><span class="prompt-path">~/Test</span><span class="prompt-delim">$</span><span class="command"> ls</span>
+<span class="output">bai0  bai0_tap  hello.txt  hello_moved.txt</span>
+<span class="prompt-user">hoang@hoang-Vostro-15-5510</span><span class="prompt-delim">:</span><span class="prompt-path">~/Test</span><span class="prompt-delim">$</span><span class="command"> pwd</span>
+<span class="output">/home/hoang/Test</span>
+<span class="prompt-user">hoang@hoang-Vostro-15-5510</span><span class="prompt-delim">:</span><span class="prompt-path">~/Test</span><span class="prompt-delim">$</span><span class="command"> touch file1.txt file2.txt file3.txt</span>
+<span class="prompt-user">hoang@hoang-Vostro-15-5510</span><span class="prompt-delim">:</span><span class="prompt-path">~/Test</span><span class="prompt-delim">$</span><span class="command"> ls</span>
+<span class="output">bai0      file1.txt  file3.txt  hello_moved.txt</span>
+<span class="output">bai0_tap  file2.txt  hello.txt</span>
+<span class="prompt-user">hoang@hoang-Vostro-15-5510</span><span class="prompt-delim">:</span><span class="prompt-path">~/Test</span><span class="prompt-delim">$</span><span class="command"> ls -ls</span>
+<span class="output">total 16</span>
+<span class="output">4 drwxrwxr-x 3 hoang hoang 4096 Aug 10 14:41 </span><span class="directory">bai0</span>
+<span class="output">4 drwxrwxr-x 2 hoang hoang 4096 Aug 10 16:20 </span><span class="directory">bai0_tap</span>
+<span class="output">0 -rw-rw-r-- 1 hoang hoang    0 Aug 10 16:21 file1.txt</span>
+<span class="output">0 -rw-rw-r-- 1 hoang hoang    0 Aug 10 16:21 file2.txt</span>
+<span class="output">0 -rw-rw-r-- 1 hoang hoang    0 Aug 10 16:21 file3.txt</span>
+<span class="output">4 -rw-rw-r-- 1 hoang hoang   46 Aug 10 10:05 hello.txt</span>
+<span class="output">4 -rw-rw-r-- 1 hoang hoang   46 Aug 10 14:23 hello_moved.txt</span>
+<span class="prompt-user">hoang@hoang-Vostro-15-5510</span><span class="prompt-delim">:</span><span class="prompt-path">~/Test</span><span class="prompt-delim">$</span><span class="command"> ls -la</span>
+<span class="output">total 24</span>
+<span class="output">drwxrwxr-x  4 hoang hoang 4096 Aug 10 16:21 .</span>
+<span class="output">drwxr-x--- 25 hoang hoang 4096 Aug 10 00:41 ..</span>
+<span class="output">drwxrwxr-x  3 hoang hoang 4096 Aug 10 14:41 bai0</span>
+<span class="output">drwxrwxr-x  2 hoang hoang 4096 Aug 10 16:20 bai0_tap</span>
+<span class="output">-rw-rw-r--  1 hoang hoang    0 Aug 10 16:21 file1.txt</span>
+<span class="output">-rw-rw-r--  1 hoang hoang    0 Aug 10 16:21 file2.txt</span>
+<span class="output">-rw-rw-r--  1 hoang hoang    0 Aug 10 16:21 file3.txt</span>
+<span class="output">-rw-rw-r--  1 hoang hoang   46 Aug 10 10:05 hello.txt</span>
+<span class="output">-rw-rw-r--  1 hoang hoang   46 Aug 10 14:23 hello_moved.txt</span>
+<span class="prompt-user">hoang@hoang-Vostro-15-5510</span><span class="prompt-delim">:</span><span class="prompt-path">~/Test</span><span class="prompt-delim">$</span><span class="command"> echo &quot;Hello 1&quot;&gt;file1.txt</span>
+<span class="prompt-user">hoang@hoang-Vostro-15-5510</span><span class="prompt-delim">:</span><span class="prompt-path">~/Test</span><span class="prompt-delim">$</span><span class="command"> head file1.txt</span>
+<span class="output">Hello 1</span>
+<span class="prompt-user">hoang@hoang-Vostro-15-5510</span><span class="prompt-delim">:</span><span class="prompt-path">~/Test</span><span class="prompt-delim">$</span><span class="command"> echo &quot;Hello 2&quot;&gt;file2.txt</span>
+<span class="prompt-user">hoang@hoang-Vostro-15-5510</span><span class="prompt-delim">:</span><span class="prompt-path">~/Test</span><span class="prompt-delim">$</span><span class="command"> echo &quot;Hello 3&quot;&gt;file3.txt</span>
+<span class="prompt-user">hoang@hoang-Vostro-15-5510</span><span class="prompt-delim">:</span><span class="prompt-path">~/Test</span><span class="prompt-delim">$</span><span class="command"> head file1 file2 file3</span>
+<span class="error">head: cannot open 'file1' for reading: No such file or directory</span>
+<span class="error">head: cannot open 'file2' for reading: No such file or directory</span>
+<span class="error">head: cannot open 'file3' for reading: No such file or directory</span>
+<span class="prompt-user">hoang@hoang-Vostro-15-5510</span><span class="prompt-delim">:</span><span class="prompt-path">~/Test</span><span class="prompt-delim">$</span><span class="command"> head file1.txt file2.txt file3.txt</span>
+<span class="output">==&gt; file1.txt &lt;==</span>
+<span class="output">Hello 1</span>
+<span class="output"></span>
+<span class="output">==&gt; file2.txt &lt;==</span>
+<span class="output">Hello 2</span>
+<span class="output"></span>
+<span class="output">==&gt; file3.txt &lt;==</span>
+<span class="output">Hello 3</span>
+<span class="prompt-user">hoang@hoang-Vostro-15-5510</span><span class="prompt-delim">:</span><span class="prompt-path">~/Test</span><span class="prompt-delim">$</span><span class="command"> ls</span>
+<span class="output">bai0      file1.txt  file3.txt  hello_moved.txt</span>
+<span class="output">bai0_tap  file2.txt  hello.txt</span>
+<span class="prompt-user">hoang@hoang-Vostro-15-5510</span><span class="prompt-delim">:</span><span class="prompt-path">~/Test</span><span class="prompt-delim">$</span><span class="command"> mkdir bai0_tap/backup</span>
+<span class="prompt-user">hoang@hoang-Vostro-15-5510</span><span class="prompt-delim">:</span><span class="prompt-path">~/Test</span><span class="prompt-delim">$</span><span class="command"> ls -R</span>
+<span class="output">.:</span>
+<span class="output">bai0      file1.txt  file3.txt  hello_moved.txt</span>
+<span class="output">bai0_tap  file2.txt  hello.txt</span>
+<span class="output"></span>
+<span class="output">./bai0:</span>
+<span class="output">hello.txt  thu_muc_a</span>
+<span class="output"></span>
+<span class="output">./bai0/thu_muc_a:</span>
+<span class="output">thu_muc_b</span>
+<span class="output"></span>
+<span class="output">./bai0/thu_muc_a/thu_muc_b:</span>
+<span class="output"></span>
+<span class="output">./bai0_tap:</span>
+<span class="output">backup</span>
+<span class="output"></span>
+<span class="output">./bai0_tap/backup:</span>
+<span class="prompt-user">hoang@hoang-Vostro-15-5510</span><span class="prompt-delim">:</span><span class="prompt-path">~/Test</span><span class="prompt-delim">$</span><span class="command"> mv file1.txt file2.txt file3.txt /bai0_tap</span>
+<span class="error">mv: target '/bai0_tap': No such file or directory</span>
+<span class="prompt-user">hoang@hoang-Vostro-15-5510</span><span class="prompt-delim">:</span><span class="prompt-path">~/Test</span><span class="prompt-delim">$</span><span class="command"> mv file1.txt file2.txt file3.txt /bai0_tap/</span>
+<span class="error">mv: target '/bai0_tap/': No such file or directory</span>
+<span class="prompt-user">hoang@hoang-Vostro-15-5510</span><span class="prompt-delim">:</span><span class="prompt-path">~/Test</span><span class="prompt-delim">$</span><span class="command"> mv file1.txt file2.txt file3.txt bai0_tap/</span>
+<span class="prompt-user">hoang@hoang-Vostro-15-5510</span><span class="prompt-delim">:</span><span class="prompt-path">~/Test</span><span class="prompt-delim">$</span><span class="command"> ls</span>
+<span class="output">bai0  bai0_tap  hello.txt  hello_moved.txt</span>
+<span class="prompt-user">hoang@hoang-Vostro-15-5510</span><span class="prompt-delim">:</span><span class="prompt-path">~/Test</span><span class="prompt-delim">$</span><span class="command"> ls /bai0_tap</span>
+<span class="error">ls: cannot access '/bai0_tap': No such file or directory</span>
+<span class="prompt-user">hoang@hoang-Vostro-15-5510</span><span class="prompt-delim">:</span><span class="prompt-path">~/Test</span><span class="prompt-delim">$</span><span class="command"> ls bai0_tap/</span>
+<span class="output">backup  file1.txt  file2.txt  file3.txt</span>
+<span class="prompt-user">hoang@hoang-Vostro-15-5510</span><span class="prompt-delim">:</span><span class="prompt-path">~/Test</span><span class="prompt-delim">$</span><span class="command"> cp file1.txt file2.txt file3.txt backup</span>
+<span class="error">cp: target 'backup': No such file or directory</span>
+<span class="prompt-user">hoang@hoang-Vostro-15-5510</span><span class="prompt-delim">:</span><span class="prompt-path">~/Test</span><span class="prompt-delim">$</span><span class="command"> cp file1.txt file2.txt file3.txt backup/</span>
+<span class="error">cp: target 'backup/': No such file or directory</span>
+<span class="prompt-user">hoang@hoang-Vostro-15-5510</span><span class="prompt-delim">:</span><span class="prompt-path">~/Test</span><span class="prompt-delim">$</span><span class="command"> ls</span>
+<span class="output">bai0  bai0_tap  hello.txt  hello_moved.txt</span>
+<span class="prompt-user">hoang@hoang-Vostro-15-5510</span><span class="prompt-delim">:</span><span class="prompt-path">~/Test</span><span class="prompt-delim">$</span><span class="command"> cd bai0_tap</span>
+<span class="prompt-user">hoang@hoang-Vostro-15-5510</span><span class="prompt-delim">:</span><span class="prompt-path">~/Test/bai0_tap</span><span class="prompt-delim">$</span><span class="command"> cp file1.txt file2.txt file3.txt backup/</span>
+<span class="prompt-user">hoang@hoang-Vostro-15-5510</span><span class="prompt-delim">:</span><span class="prompt-path">~/Test/bai0_tap</span><span class="prompt-delim">$</span><span class="command"> ls -R</span>
+<span class="output">.:</span>
+<span class="output">backup  file1.txt  file2.txt  file3.txt</span>
+<span class="output"></span>
+<span class="output">./backup:</span>
+<span class="output">file1.txt  file2.txt  file3.txt</span>
+<span class="prompt-user">hoang@hoang-Vostro-15-5510</span><span class="prompt-delim">:</span><span class="prompt-path">~/Test/bai0_tap</span><span class="prompt-delim">$</span><span class="command"> mv file3.txt .</span>
+<span class="error">mv: 'file3.txt' and './file3.txt' are the same file</span>
+<span class="prompt-user">hoang@hoang-Vostro-15-5510</span><span class="prompt-delim">:</span><span class="prompt-path">~/Test/bai0_tap</span><span class="prompt-delim">$</span><span class="command"> mv file3.txt ..</span>
+<span class="prompt-user">hoang@hoang-Vostro-15-5510</span><span class="prompt-delim">:</span><span class="prompt-path">~/Test/bai0_tap</span><span class="prompt-delim">$</span><span class="command"> ls</span>
+<span class="output">backup  file1.txt  file2.txt</span>
+<span class="prompt-user">hoang@hoang-Vostro-15-5510</span><span class="prompt-delim">:</span><span class="prompt-path">~/Test/bai0_tap</span><span class="prompt-delim">$</span><span class="command"> cd ..</span>
+<span class="prompt-user">hoang@hoang-Vostro-15-5510</span><span class="prompt-delim">:</span><span class="prompt-path">~/Test</span><span class="prompt-delim">$</span><span class="command"> ls</span>
+<span class="output">bai0  bai0_tap  file3.txt  hello.txt  hello_moved.txt</span>
+<span class="prompt-user">hoang@hoang-Vostro-15-5510</span><span class="prompt-delim">:</span><span class="prompt-path">~/Test</span><span class="prompt-delim">$</span><span class="command"> rm bai0-tap/file2.txt</span>
+<span class="error">rm: cannot remove 'bai0-tap/file2.txt': No such file or directory</span>
+<span class="prompt-user">hoang@hoang-Vostro-15-5510</span><span class="prompt-delim">:</span><span class="prompt-path">~/Test</span><span class="prompt-delim">$</span><span class="command"> rm bai0_tap/file2.txt</span>
+<span class="prompt-user">hoang@hoang-Vostro-15-5510</span><span class="prompt-delim">:</span><span class="prompt-path">~/Test</span><span class="prompt-delim">$</span><span class="command"> ls -R</span>
+<span class="output">.:</span>
+<span class="output">bai0  bai0_tap  file3.txt  hello.txt  hello_moved.txt</span>
+<span class="output"></span>
+<span class="output">./bai0:</span>
+<span class="output">hello.txt  thu_muc_a</span>
+<span class="output"></span>
+<span class="output">./bai0/thu_muc_a:</span>
+<span class="output">thu_muc_b</span>
+<span class="output"></span>
+<span class="output">./bai0/thu_muc_a/thu_muc_b:</span>
+<span class="output"></span>
+<span class="output">./bai0_tap:</span>
+<span class="output">backup</span>
+<span class="output"></span>
+<span class="output">./bai0_tap/backup:</span>
+</pre>
+</div>
+</body>
+</html>
