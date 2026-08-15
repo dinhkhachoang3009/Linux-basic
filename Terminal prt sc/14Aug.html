@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminal Output - 14 Aug</title>
+    <style>
+        body {
+            background-color: #0d0d0d;
+            color: #d4d4d4;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.4;
+        }
+        pre {
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            overflow-x: auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        font[color="#39E9A8"] {
+            color: #4ec9b0;
+        }
+        font[color="#44AAE6"] {
+            color: #569cd6;
+        }
+        b {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<pre><font color="#39E9A8"><b>hoang@hoang-Vostro-15-5510</b></font>:<font color="#44AAE6"><b>~</b></font>$ whoami
+hoang
+<font color="#39E9A8"><b>hoang@hoang-Vostro-15-5510</b></font>:<font color="#44AAE6"><b>~</b></font>$ sudo -l
+[sudo: authenticate] Password:         
+User hoang may run the following commands on hoang-Vostro-15-5510:
+    (ALL : ALL) ALL
+<font color="#39E9A8"><b>hoang@hoang-Vostro-15-5510</b></font>:<font color="#44AAE6"><b>~</b></font>$ groups
+hoang adm cdrom sudo dip plugdev users lpadmin lxd
+<font color="#39E9A8"><b>hoang@hoang-Vostro-15-5510</b></font>:<font color="#44AAE6"><b>~</b></font>$ echo $HOME
+/home/hoang
+<font color="#39E9A8"><b>hoang@hoang-Vostro-15-5510</b></font>:<font color="#44AAE6"><b>~</b></font>$ cd /root
+bash: cd: /root: Permission denied
+<font color="#39E9A8"><b>hoang@hoang-Vostro-15-5510</b></font>:<font color="#44AAE6"><b>~</b></font>$ ls -ld /root
+drwx------ 6 root root 4096 Aug 10 11:25 <font color="#44AAE6"><b>/root</b></font>
+<font color="#39E9A8"><b>hoang@hoang-Vostro-15-5510</b></font>:<font color="#44AAE6"><b>~</b></font>$ sudo ls -la root
+ls: cannot access 'root': No such file or directory
+<font color="#39E9A8"><b>hoang@hoang-Vostro-15-5510</b></font>:<font color="#44AAE6"><b>~</b></font>$ sudo ls -la /root
+total 32
+drwx------  6 root root 4096 Aug 10 11:25 .
+drwxr-xr-x 20 root root 4096 Aug  7 14:10 ..
+-rw-r--r--  1 root root 3106 Apr 20 15:46 .bashrc
+drwx------  2 root root 4096 Apr 23 08:18 .cache
+drwx------  3 root root 4096 Aug 10 11:25 .local
+-rw-r--r--  1 root root  132 Apr 20 15:46 .profile
+drwx------  2 root root 4096 Aug  7 14:21 .ssh
+drwx------ 12 root root 4096 Aug 12 14:30 snap
+<font color="#39E9A8"><b>hoang@hoang-Vostro-15-5510</b></font>:<font color="#44AAE6"><b>~</b></font>$ cat /etc/hostname
+hoang-Vostro-15-5510
+<font color="#39E9A8"><b>hoang@hoang-Vostro-15-5510</b></font>:<font color="#44AAE6"><b>~</b></font>$ cat /etc/hosts
+127.0.0.1 localhost
+127.0.1.1 hoang-Vostro-15-5510
+
+# The following lines are desirable for IPv6 capable hosts
+::1     ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+<font color="#39E9A8"><b>hoang@hoang-Vostro-15-5510</b></font>:<font color="#44AAE6"><b>~</b></font>$ id
+uid=1000(hoang) gid=1000(hoang) groups=1000(hoang),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),100(users),111(lpadmin),114(lxd)
+<font color="#39E9A8"><b>hoang@hoang-Vostro-15-5510</b></font>:<font color="#44AAE6"><b>~</b></font>$ cd /root
+bash: cd: /root: Permission denied
+<font color="#39E9A8"><b>hoang@hoang-Vostro-15-5510</b></font>:<font color="#44AAE6"><b>~</b></font>$ ls -la /root
+ls: cannot open directory '/root': Permission denied
+<font color="#39E9A8"><b>hoang@hoang-Vostro-15-5510</b></font>:<font color="#44AAE6"><b>~</b></font>$ sudo ls -la root
+[sudo: authenticate] Password:         
+ls: cannot access 'root': No such file or directory
+<font color="#39E9A8"><b>hoang@hoang-Vostro-15-5510</b></font>:<font color="#44AAE6"><b>~</b></font>$ sudo ls -la /root
+total 32
+drwx------  6 root root 4096 Aug 10 11:25 .
+drwxr-xr-x 20 root root 4096 Aug  7 14:10 ..
+-rw-r--r--  1 root root 3106 Apr 20 15:46 .bashrc
+drwx------  2 root root 4096 Apr 23 08:18 .cache
+drwx------  3 root root 4096 Aug 10 11:25 .local
+-rw-r--r--  1 root root  132 Apr 20 15:46 .profile
+drwx------  2 root root 4096 Aug  7 14:21 .ssh
+drwx------ 12 root root 4096 Aug 12 14:30 snap
+<font color="#39E9A8"><b>hoang@hoang-Vostro-15-5510</b></font>:<font color="#44AAE6"><b>~</b></font>$ cd /etc
+</pre>
+</body>
+</html>
