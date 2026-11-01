@@ -1,0 +1,252 @@
+---
+- name: "Play 1/4 - Base configuration for every node"
+  hosts: all
+  become: true
+  vars:
+    # Never hardcoded: discover the public IP of whoever runs this playbook,
+    # at the moment it runs. A stale IP can no longer cause a lockout.
+    admin_ip: "{{ lookup('pipe', 'curl -s --max-time 10 https://api.ipify.org') }}"
+  tasks:
+    - name: Install baseline packages (curl + ufw)
+      apt:
+        name: [curl, ufw]
+        state: present
+        update_cache: true
+
+    - name: Show which admin IP this run is allowing (for the report)
+      ansible.builtin.debug:
+        msg: "This run allows SSH from {{ admin_ip }}"
+
+    - name: Allow SSH from the admin IP - BEFORE enabling UFW (lockout protection)
+      ufw:
+        rule: allow
+        src: "{{ admin_ip }}"
+        port: "22"
+        proto: tcp
+        comment: "Week 12 admin SSH (dynamic)"
+
+    - name: Allow SSH from the GCP rescue IP (permanent backdoor if admin IP changes)
+      ufw:
+        rule: allow
+        src: "{{ gcp_ip }}"
+        port: "22"
+        proto: tcp
+        comment: "Week 12 GCP rescue SSH"
+
+    - name: Remove Week 9's broad SSH rule (Anywhere) if present - SSH becomes admin-only
+      ufw:
+        rule: allow
+        port: "22"
+        proto: tcp
+        delete: true
+
+    - name: Set default policy - deny all incoming
+      ufw:
+        direction: incoming
+        policy: deny
+
+    - name: Enable UFW
+      ufw:
+        state: enabled
+
+- name: "Play 2/4 - NFS server (Node 3)"
+  hosts: nfs
+  become: true
+  tasks:
+    - name: Install the NFS server
+      apt:
+        name: nfs-kernel-server
+        state: present
+
+    - name: Create the shared app directory
+      file:
+        path: /srv/app
+        state: directory
+        owner: nobody
+        group: nogroup
+        mode: "0755"
+
+    - name: Deploy the shared web page
+      template:
+        src: index.html.j2
+        dest: /srv/app/index.html
+        mode: "0644"
+
+    - name: Export /srv/app to Node 2 only
+      lineinfile:
+        path: /etc/exports
+        line: "/srv/app {{ hostvars['vm3'].private_ip }}(rw,sync,no_subtree_check)"
+        state: present
+      notify: Re-export NFS
+
+    - name: Open the NFS port for Node 2 only
+      ufw:
+        rule: allow
+        src: "{{ hostvars['vm3'].private_ip }}"
+        port: "2049"
+        proto: tcp
+        comment: "NFS for Node 2"
+
+    - name: Start and enable the NFS server
+      service:
+        name: nfs-kernel-server
+        state: started
+        enabled: true
+
+  handlers:
+    - name: Re-export NFS
+      command: exportfs -ra
+
+- name: "Play 3/4 - Docker web workers (Nodes 2 and 3)"
+  hosts: workers
+  become: true
+  tasks:
+    - name: Install the NFS client and Docker
+      apt:
+        name: [nfs-common, docker.io]
+        state: present
+        update_cache: true
+
+    - name: Mount the shared app directory (only on nodes that do NOT own the storage)
+      mount:
+        src: "{{ hostvars['vm1'].private_ip }}:/srv/app"
+        path: /srv/app
+        fstype: nfs
+        opts: _netdev,nofail,rw,vers=4
+        state: mounted
+      when: "'nfs' not in group_names"
+
+    - name: Create the per-node identity directory
+      file:
+        path: /opt/webapp
+        state: directory
+        mode: "0755"
+
+    - name: Deploy the per-node identity file (served as /node.txt)
+      template:
+        src: node.txt.j2
+        dest: /opt/webapp/node.txt
+        mode: "0644"
+
+    - name: Deploy the container's nginx config (serves /node.txt from the local file)
+      template:
+        src: webapp-default.conf.j2
+        dest: /opt/webapp/default.conf
+        mode: "0644"
+      notify: Restart webapp
+
+    - name: Allow the LB to reach the app port
+      ufw:
+        rule: allow
+        src: "{{ hostvars['vm2'].private_ip }}"
+        port: "8080"
+        proto: tcp
+        comment: "LB to app"
+
+    - name: Deploy the webapp systemd wrapper unit
+      template:
+        src: webapp.service.j2
+        dest: /etc/systemd/system/webapp.service
+        mode: "0644"
+      notify: Restart webapp
+
+    - name: Start and enable the webapp container service
+      systemd:
+        name: webapp
+        state: started
+        enabled: true
+        daemon_reload: true
+
+  handlers:
+    - name: Restart webapp
+      systemd:
+        name: webapp
+        state: restarted
+        daemon_reload: true
+
+- name: "Play 4/4 - Load balancer and gateway (Node 1)"
+  hosts: lb
+  become: true
+  tasks:
+    - name: Install Nginx and Fail2ban
+      apt:
+        name: [nginx, fail2ban]
+        state: present
+        update_cache: true
+
+    - name: Create the LB pages directory
+      file:
+        path: /var/www/lb
+        state: directory
+        mode: "0755"
+
+    - name: Deploy the load-balancer site config
+      template:
+        src: lb.conf.j2
+        dest: /etc/nginx/sites-available/lb.conf
+        mode: "0644"
+      notify: Reload Nginx
+
+    - name: Enable the LB site
+      file:
+        src: /etc/nginx/sites-available/lb.conf
+        dest: /etc/nginx/sites-enabled/lb.conf
+        state: link
+      notify: Reload Nginx
+
+    - name: Remove leftover sites (they conflict with the LB)
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /etc/nginx/sites-enabled/default
+        - /etc/nginx/sites-enabled/shared-site
+      notify: Reload Nginx
+
+    - name: Validate the nginx configuration
+      command: nginx -t
+      changed_when: false
+
+    - name: Deploy the rate-limit page
+      template:
+        src: rate_limited.html.j2
+        dest: /var/www/lb/rate_limited.html
+        mode: "0644"
+
+    - name: Make sure Nginx is running and enabled
+      service:
+        name: nginx
+        state: started
+        enabled: true
+
+    - name: Deploy the Fail2ban jail configuration
+      template:
+        src: jail.local.j2
+        dest: /etc/fail2ban/jail.local
+        mode: "0644"
+      notify: Restart Fail2ban
+
+    - name: Make sure Fail2ban is running and enabled
+      service:
+        name: fail2ban
+        state: started
+        enabled: true
+
+    - name: Open the public web ports
+      ufw:
+        rule: allow
+        port: "{{ item }}"
+        proto: tcp
+        comment: "Public web"
+      loop: ["80", "443"]
+
+  handlers:
+    - name: Reload Nginx
+      service:
+        name: nginx
+        state: reloaded
+
+    - name: Restart Fail2ban
+      service:
+        name: fail2ban
+        state: restarted

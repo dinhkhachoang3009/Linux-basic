@@ -1,0 +1,20 @@
+# /etc/fail2ban/jail.local - Week 12 gateway shields
+# Managed by Ansible (template: jail.local.j2)
+
+[DEFAULT]
+# Never ban ourselves: localhost + the admin's public IP + the GCP rescue IP
+ignoreip = 127.0.0.1/8 ::1 {{ gcp_ip }}
+bantime  = 10m
+findtime = 10m
+
+[sshd]
+enabled  = true
+backend  = systemd
+maxretry = 5
+
+[nginx-limit-req]
+enabled  = true
+logpath  = /var/log/nginx/error.log
+maxretry = 10
+findtime = 1m
+bantime  = 10m

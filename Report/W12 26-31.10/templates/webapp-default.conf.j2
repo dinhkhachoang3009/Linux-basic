@@ -1,0 +1,11 @@
+server {
+    listen 80;
+    root /usr/share/nginx/html;
+
+    # Per-worker identity served from a HOST-local file (mounted outside the
+    # read-only html bind, because Docker cannot create mountpoints inside :ro binds).
+    location = /node.txt {
+        alias /etc/webapp/node.txt;
+        default_type text/plain;
+    }
+}

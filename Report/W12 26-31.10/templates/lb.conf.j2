@@ -1,0 +1,31 @@
+# /etc/nginx/sites-available/lb.conf - Week 12 load balancer
+# Managed by Ansible (template: lb.conf.j2)
+
+# Rate limiting: 10 requests/second per client IP, absorb a burst of 20
+limit_req_zone $binary_remote_addr zone=perip:10m rate=10r/s;
+
+upstream appcluster {
+    server {{ hostvars['vm3'].private_ip }}:8080 max_fails=3 fail_timeout=10s;  # Node 2 (VM3)
+    server {{ hostvars['vm1'].private_ip }}:8080 max_fails=3 fail_timeout=10s;  # Node 3 (VM1)
+}
+
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    server_name _;
+
+    location / {
+        proxy_pass http://appcluster;
+        proxy_next_upstream error timeout http_502 http_503 http_504;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        limit_req zone=perip burst=20 nodelay;
+    }
+
+    error_page 429 /rate_limited.html;
+    location = /rate_limited.html {
+        internal;
+        root /var/www/lb;
+    }
+}

@@ -1,0 +1,19 @@
+[Unit]
+Description=Week 12 web app container (nginx:alpine serving shared NFS content)
+Requires=docker.service
+RequiresMountsFor=/srv/app
+
+[Service]
+ExecStartPre=-/usr/bin/docker rm -f webapp
+ExecStart=/usr/bin/docker run --name webapp --rm \
+  -p {{ private_ip }}:8080:80 \
+  -v /srv/app:/usr/share/nginx/html:ro \
+  -v /opt/webapp/node.txt:/etc/webapp/node.txt:ro \
+  -v /opt/webapp/default.conf:/etc/nginx/conf.d/default.conf:ro \
+  nginx:alpine
+ExecStop=/usr/bin/docker stop webapp
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
